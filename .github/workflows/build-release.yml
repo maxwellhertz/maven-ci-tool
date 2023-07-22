@@ -5,6 +5,7 @@ on:
     branches:
       - main
 
+# Add this to avoid 403 error
 permissions:
   contents: write
 
@@ -32,7 +33,7 @@ jobs:
       # change version every time you create a release
       run: |
         echo "APP_NAME=maven_ci_tool" >> $GITHUB_ENV
-        echo "VERSION=v0.1.0" >> $GITHUB_ENV
+        echo "VERSION=v0.1.1" >> $GITHUB_ENV
 
     - name: Build
       run: GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o ${{ env.APP_NAME }}_${{ matrix.os }}_${{ matrix.arch }} ./cmd
