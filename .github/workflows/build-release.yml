@@ -1,9 +1,9 @@
 name: Build Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  push: 
+    branches:
+      - main
 
 jobs:
   build:
@@ -26,9 +26,11 @@ jobs:
         go-version: ${{ matrix.go-version }}
 
     - name: Set env variables
+      # change version every time you create a release
       run: |
-        echo "OUTPUT_DIR=${OUTPUT_DIR}" >> $GITHUB_ENV
-        echo "APP_NAME=${APP_NAME}" >> $GITHUB_ENV
+        echo "OUTPUT_DIR=./out" >> $GITHUB_ENV
+        echo "APP_NAME=maven_ci_tool" >> $GITHUB_ENV
+        echo "VERSION=v0.1.0" >> $GITHUB_ENV
 
     - name: Create the output directory
       run: mkdir ${{ env.OUTPUT_DIR }}
@@ -40,4 +42,5 @@ jobs:
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: ${{ env.VERSION }}
         files: ${{ env.APP_NAME }}/${{ env.OUTPUT_DIR }}_${{ matrix.os }}_${{ matrix.arch }}
