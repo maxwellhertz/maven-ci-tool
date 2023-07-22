@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 
 	"github.com/antchfx/xmlquery"
 	"github.com/maxwellhertz/maven-project-ci-tool/internal/pkg"
@@ -68,15 +69,18 @@ func (u *DefaultPomUtils) ConfigurePlugins(pomFile io.Reader) ([]byte, error) {
 	u.pluginsNode = pluginsNode
 
 	// Add Surefire plugin.
+	log.Println("Installing the latest release of " + surefirePluginArtifactId)
 	if _, err := u.createPluginNode(surefirePluginGroupId, surefirePluginArtifactId); err != nil {
 		return nil, fmt.Errorf("can't add %v: %w", surefirePluginArtifactId, err)
 	}
 
 	// Add JaCoCo plugin.
+	log.Println("Installing the latest release of " + jacocoPluginArtifactId)
 	jacocoNode, err := u.createPluginNode(jacocoPluginGroupId, jacocoPluginArtifactId)
 	if err != nil {
 		return nil, fmt.Errorf("can't add %v: %w", jacocoPluginArtifactId, err)
 	}
+	log.Println("Configuring execution rules for " + jacocoPluginArtifactId)
 	u.configureJaCoCoPlugin(jacocoNode)
 
 	return []byte(u.xmlRoot.OutputXML(true)), nil
